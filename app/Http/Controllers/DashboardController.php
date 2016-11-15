@@ -20,24 +20,6 @@ class DashboardController extends Controller
         return view('welcome', compact('ranking', 'props'));
     }
 
-    public function userDetail($username)
-    {
-        $user = SlackUser::find($username);
-        $scoreboard  = $user->getReceivedPropsPerMonth();
-
-        $propsReceived = $user->receivedProps()
-            ->orderBy('created_at', 'DESC')
-            ->take(10)
-            ->get();
-
-        $propsGiven = $user->givenProps()
-            ->orderBy('created_at', 'DESC')
-            ->take(10)
-            ->get();
-
-        return view('users.view', compact('user', 'propsReceived', 'propsGiven','scoreboard'));
-    }
-
     public function slack()
     {
         Slack::beGrowbot();
