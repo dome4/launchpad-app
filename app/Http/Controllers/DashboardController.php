@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\Ranking;
 use App\Services\Slack;
 use App\SlackProp;
-use App\SlackUser;
 
 class DashboardController extends Controller
 {

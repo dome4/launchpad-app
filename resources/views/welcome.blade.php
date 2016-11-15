@@ -4,6 +4,8 @@
 @section('subtitle', 'Everything at a glance')
 
 @section('content')
+    @include('layouts.partials.autoreloadalert')
+
     <div class="row">
         <div class="col-md-4">
             <div class="box box-solid">
@@ -24,7 +26,7 @@
                         @foreach($ranking as $rank)
                             <tr>
                                 <td>
-                                    <a href="{!! action('DashboardController@userDetail', ['id' => $rank->user->id]) !!}">
+                                    <a href="{!! action('SlackUserController@show', ['user' => $rank->user]) !!}">
                                         {{ $rank->user->getName() }}
                                     </a>
                                 </td>
@@ -69,11 +71,15 @@
             @include('opening-times.partials.trafficlights')
         </div>
     </div>
+@endsection
 
-    <hr>
-    <p>
-        <a class="btn btn-primary" href="{!! action('DashboardController@slack') !!}">
-            Rankings aus Slack importieren
-        </a>
-    </p>
+@section('scripts')
+    <!-- Autoreload feature -->
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                window.location.reload(false);
+            }, 60000); // once per minute
+        });
+    </script>
 @endsection

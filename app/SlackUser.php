@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -26,8 +27,15 @@ class SlackUser extends Model
         return ($this->real_name ? $this->real_name : '@' . $this->name);
     }
 
-    public function getReceivedPropsPerMonth()
+    public function getReceivedPropsPerWeek()
     {
-        return (DB::query()->where('receiver_id', $this->id)->from('slack_props')->groupBy(DB::raw('WEEK(created_at)'))->select(DB::raw('WEEK(created_at) AS kw, count(*) AS ranking'))->get());
+        $propsPerWeek = DB::query()
+            ->select(DB::raw('WEEK(created_at) AS kw, count(*) AS ranking'))
+            ->from('slack_props')
+            ->where('receiver_id', $this->id)
+            ->where(DB::raw('YEAR(created_at)'), date('Y'))
+            ->groupBy(DB::raw('WEEK(created_at)')) // mysql-only
+            ->get();
+        return $propsPerWeek;
     }
 }
