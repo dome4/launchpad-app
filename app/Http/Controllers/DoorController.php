@@ -42,7 +42,10 @@ class DoorController extends Controller
      */
     public function changeStatus()
     {
-        if ($this->getLastOpeningTime()->isOpen()) {
+        //get last opining time as variable
+        $latest = $this->getLastOpeningTime();
+
+        if ($latest->isOpen()) {
             $this->close();
             return redirect()->back();
         }
@@ -92,10 +95,17 @@ class DoorController extends Controller
      */
     public function close()
     {
-        // close last opening time
+        // get last opening time
         $openingTime = $this->getLastOpeningTime();
-        $openingTime->close_at = Carbon::now();
-        $openingTime->save();
+        $currentTime = Carbon::now();
+
+        //compare last opening time with the current time plus 10 minutes
+        if($openingTime->open_at->addMinutes(10) < $currentTime)
+        {
+            $openingTime->close_at = $currentTime;
+            $openingTime->save();
+        }
+
         return $openingTime;
     }
 
